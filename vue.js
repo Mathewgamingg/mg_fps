@@ -2,7 +2,7 @@ const app = new Vue({
   el: '#app',
   data: {
     ui: false,
-    fps: 70,
+    fps: 60,
     arrowLeft: true,
     arrowRight: true,
     randomColor: '#FFFFFF', 

@@ -6,7 +6,7 @@ Config = {
 
 function GetFramework()
     local Get = nil
-    if Config.Framework == "ESX" then
+    if Config.Framework == "ESx" then
         while Get == nil do
             TriggerEvent('esx:getSharedObject', function(Set) Get = Set end)
             Citizen.Wait(0)
