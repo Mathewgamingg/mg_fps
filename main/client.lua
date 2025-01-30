@@ -1,5 +1,5 @@
 local Framework = GetFramework()
-local Callback = (Config.Framework == "ESx" or Config.Framework == "NewESX") and Framework.TriggerServerCallback or Framework.Functions.TriggerCallback
+local Callback = (Config.Framework == "ESX" or Config.Framework == "NewESX") and Framework.TriggerServerCallback or Framework.Functions.TriggerCallback
 
 RegisterNUICallback('Close', function()
     SetNuiFocus(false, false)

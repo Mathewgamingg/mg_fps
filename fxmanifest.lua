@@ -2,7 +2,7 @@ fx_version "cerulean"
 game "gta5"
 lua54 'yes'
 
-author 'MG/MathewGaming'
+author 'MG / MathewGaming'
 description "FPS Boost Menu"
 version '1.0.0'
 
