@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>mg_fpsmenu</title>
+    <link rel="stylesheet" href="../assets/css/app.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/line-awesome/dist/line-awesome/css/line-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+</head>
+
+<div id="app" :style="{ display: ui ? 'block' : 'none' }">
+
+
+  <div class="centered-element">
+
+    <div class="header">
+      <div class="title">FPS <span :style="{ color: randomColor }">MENU </span></div>
+      <div class="subtitle">Vítej v “<span :style="{ color: randomColor }">FPS MENU</span>”</div>
+    </div>
+    
+    <div class="hex-wrapper">
+      <div class="left-arrow-container">
+        <div class="arrow" @click="toggleLeftArrow">
+          <svg width="3.1875rem" height="3.5625rem" viewBox="0 0 51 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path 
+              d="M30.9036 10.2383L38.2366 17.5713L26.7133 29.0947V31.1898L37.1891 41.6656L29.856 48.9986L11.5234 29.6185L30.9036 10.2383Z" 
+              :fill="randomColor" fill-opacity="0.95"/>
+            
+            <path 
+              d="M26.7133 29.0947L38.2366 17.5713L30.9036 10.2383L11.5234 29.6185L29.856 48.9986L37.1891 41.6656L26.7133 31.1898M26.7133 29.0947V31.1898M26.7133 29.0947L25.6657 30.1422L26.7133 31.1898" 
+              :stroke="randomColor" stroke-width="6.28546"/>
+            
+            <g filter="url(#filter0_dd_1855_3525)">
+              <path 
+                d="M26.7133 29.0947L38.2366 17.5713L30.9036 10.2383L11.5234 29.6185L29.856 48.9986L37.1891 41.6656L26.7133 31.1898M26.7133 29.0947V31.1898M26.7133 29.0947L25.6657 30.1422L26.7133 31.1898" 
+                :stroke="randomColor" stroke-width="2.09515"/>
+            </g>
+            
+            <defs>
+              <filter id="filter0_dd_1855_3525" x="3.77704" y="0.375245" width="42.2262" height="56.4122" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                <feOffset/>
+                <feGaussianBlur stdDeviation="3.14273"/>
+                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1855_3525"/>
+                <feOffset dy="-2.09515"/>
+                <feGaussianBlur stdDeviation="3.14273"/>
+                <feBlend mode="normal" in2="effect1_dropShadow_1855_3525" result="effect2_dropShadow_1855_3525"/>
+                <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_1855_3525" result="shape"/>
+              </filter>
+              
+              <linearGradient id="paint0_linear_1855_3525" x1="24.88" y1="10.2383" x2="24.88" y2="48.9986" gradientUnits="userSpaceOnUse">
+                <stop :stop-color="randomColor"/>
+                <stop offset="1" :stop-color="randomColor"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    
+      <div class="left-container">
+        <div
+          class="border hex-item"
+          v-for="(item, index) in leftItems"
+          :key="item.id"
+          :style="getHexItemStyle(arrowLeft, item.id)"
+          @mouseover="onHover(item.id, true)"
+          @mouseleave="onHover(item.id, false)"
+          @click="item.id === 'boost' ? applyBoostSettings() : item.id === 'reset' ? applyResetSettings() : applyDefaultSettings()"
+        >
+          <div class="text" :class="{ 'hover-text': isHovered[item.id], 'selected-text': selectedId === item.id }">
+            {{ item.label }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="right-container">
+        <div
+          class="border hex-item"
+          v-for="(item, index) in rightItems"
+          :key="item.id"
+          :style="getHexItemStyle(arrowRight, item.id)"
+          @mouseover="onHover(item.id, true)"
+          @mouseleave="onHover(item.id, false)"
+          @click="item.id === 'normal' ? applyNormalSettings() : item.id === 'medium' ? applyMediumSettings() : applyUltraSettings()"
+        >
+          <div class="text" :class="{ 'hover-text': isHovered[item.id], 'selected-text': selectedId === item.id }">
+            {{ item.label }}
+          </div>
+        </div>
+      </div>
+      
+      
+      
+      
+      
+      
+        
+
+      
+    
+      <div class="right-arrow-container">
+        <div class="arrow" @click="toggleRightArrow">
+          <svg width="52px" height="57px" viewBox="0 0 52 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Main Arrow Path with randomColor -->
+            <path 
+              d="M20.3933 48.7353L12.8963 41.57L24.156 29.7889L24.1086 27.6943L13.3985 17.4582L20.5638 9.96117L39.3301 28.9217L20.3933 48.7353Z" 
+              :fill="randomColor" fill-opacity="0.95"/>
+          
+            <!-- Arrow Border/Stroke with randomColor -->
+            <path 
+              d="M24.156 29.7889L12.8963 41.57L20.3933 48.7353L39.3301 28.9217L20.5638 9.96117L13.3985 17.4582L24.1086 27.6943M24.156 29.7889L24.1086 27.6943M24.156 29.7889L25.1796 28.7179L24.1086 27.6943" 
+              :stroke="randomColor" stroke-width="6.28546"/>
+          
+            <!-- Glowing Effect with correct filter -->
+            <g filter="url(#filter0_dd_1855_3525)">
+              <path 
+                d="M24.156 29.7889L12.8963 41.57L20.3933 48.7353L39.3301 28.9217L20.5638 9.96117L13.3985 17.4582L24.1086 27.6943M24.156 29.7889L24.1086 27.6943M24.156 29.7889L25.1796 28.7179L24.1086 27.6943" 
+                :stroke="randomColor" stroke-width="2.09515"/>
+            </g>
+          
+            <!-- Definitions -->
+            <defs>
+              <!-- Drop Shadow Filter -->
+              <filter id="filter0_dd_1855_3525" x="3.77704" y="0.375245" width="42.2262" height="56.4122" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                <feOffset/>
+                <feGaussianBlur stdDeviation="3.14273"/>
+                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1855_3525"/>
+                <feOffset dy="-2.09515"/>
+                <feGaussianBlur stdDeviation="3.14273"/>
+                <feBlend mode="normal" in2="effect1_dropShadow_1855_3525" result="effect2_dropShadow_1855_3525"/>
+                <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_1855_3525" result="shape"/>
+              </filter>
+          
+              <!-- Gradient for Color Transition using randomColor -->
+              <linearGradient id="paint0_linear_1855_3525" x1="24.88" y1="10.2383" x2="24.88" y2="48.9986" gradientUnits="userSpaceOnUse">
+                <stop :stop-color="randomColor"/>
+                <stop offset="1" :stop-color="randomColor"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          
+          
+          
+          
+        </div>
+      </div>
+    </div>
+    
+
+    
+
+
+    
+    
+    
+
+    <div class="load">
+      <svg width="25.6875rem" height="26.375rem" viewBox="0 0 411 422" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g :filter="`drop-shadow(0px 0px 15px ${randomColor})`">
+          <circle cx="205.195" cy="171.643" r="160.09" fill="url(#paint0_linear_1812_3515)" fill-opacity="0.2" shape-rendering="crispEdges" />
+          <circle cx="205.195" cy="171.643" r="158.962" stroke="white" stroke-opacity="0.07" stroke-width="2.25479" shape-rendering="crispEdges" />
+        </g>
+        <path d="M324.699 171.642C324.699 237.642 271.7 291.146 206.323 291.146C140.945 291.146 87.9463 237.642 87.9463 171.642C87.9463 105.642 140.945 52.1387 206.323 52.1387C271.7 52.1387 324.699 105.642 324.699 171.642Z"
+          stroke="white" stroke-opacity="0.2" stroke-width="11.2739" stroke-dasharray="1.13 11.27" />
+        
+        <path 
+          :stroke-dasharray="(this.fps / maxFps) * 900 + ', 900'"
+          d="M205.246 44.1955C221.976 44.1955 238.542 47.4907 253.998 53.893C269.455 60.2953 283.499 69.6793 295.329 81.5091C307.159 93.339 316.543 107.383 322.945 122.84C329.347 138.296 332.642 154.862 332.642 171.592C332.642 188.322 329.347 204.888 322.945 220.345C316.543 235.801 307.159 249.845 295.329 261.675C283.499 273.505 269.455 282.889 253.998 289.291C238.542 295.694 221.976 298.989 205.246 298.989C188.516 298.989 171.95 295.694 156.493 289.291C141.037 282.889 126.993 273.505 115.163 261.675C103.333 249.845 93.9489 235.801 87.5466 220.345C81.1443 204.888 77.8491 188.322 77.8491 171.592C77.8491 154.862 81.1443 138.296 87.5466 122.84C93.9489 107.383 103.333 93.339 115.163 81.5091C126.993 69.6792 141.037 60.2953 156.493 53.893C171.95 47.4907 188.516 44.1955 205.246 44.1955L205.246 44.1955Z"
+          :stroke="`url(#paint1_radial_1812_3515)`"
+          stroke-width="6.55" stroke-linecap="round" stroke-linejoin="round" />
+        
+        <text fill="#C7D0EF" fill-opacity="0.64" xml:space="preserve" style="white-space: pre" font-family="Petch" font-size="40.9482" font-weight="600" letter-spacing="0em">
+          <tspan x="169.044" y="236.504">FPS</tspan>
+        </text>
+        <text fill="white" xml:space="preserve" style="white-space: pre" font-family="Petch" text-anchor="middle" font-size="97.3012" font-weight="600" letter-spacing="-0.05em">
+          <tspan x="196.999" y="183.277">{{ Math.floor(fps) }}</tspan>
+        </text>
+        <defs>
+          <linearGradient id="paint0_linear_1812_3515" x1="205.195" y1="11.5527" x2="205.195" y2="331.732" gradientUnits="userSpaceOnUse">
+            <stop stop-opacity="0.1" />
+            <stop offset="0.692708" stop-opacity="0.0677083" />
+            <stop offset="1" />
+          </linearGradient>
+          <radialGradient id="paint1_radial_1812_3515" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+            gradientTransform="translate(199.865 151.512) rotate(-154.939) scale(170.732 170.732)">
+            <stop stop-color="white" />
+            <stop offset="0.75" :stop-color="randomColor" />
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+    
+
+    <div class="settings-container">
+      <div class="settings-grid">
+        <div class="settings-item"
+          v-for="(item, index) in settings"
+          :key="index"
+          :class="{
+            'cars-render-distance': item.title === 'CARS RENDER DISTANCE',
+            'reflections-lights': item.title === 'REFLECTIONS & LIGHTS',
+            'shadows-quality': item.title === 'SHADOWS QUALITY',
+            'grass-quality': item.title === 'GRASS DETAIL',
+            'ped-destiny': item.title === 'PED DENSITY', 
+            'ped-sceranio': item.title === 'SCENARIO PED DENSITY', 
+          }">
+    
+          <div class="content">
+            <div class="settings-title">{{ item.title }}</div>
+    
+            <!-- Slider Details -->
+            <div v-if="item.type === 'slider'" class="settings-details">
+              {{ item.details }}
+            </div>
+    
+            <div v-if="item.type === 'switch'" class="settings-status">
+              STATUS:
+              <span :style="{ color: item.value ? '#E04A29' : '#999999' }"> 
+                {{ item.value ? 'ON' : 'OFF' }}
+              </span>
+            </div>            
+    
+            <!-- Performance Mode for Slider -->
+              <div v-if="item.type === 'slider'" class="settings-status" style="margin-top: 0.75rem;">
+                PERFORMANCE:
+                <span :style="{ color: '#E04A29' }">
+                  {{ item.value == 50 ? 'Balanced Mode' : (item.value < 50 ? 'High Performance Mode' : 'Low Performance Mode') }}
+                </span>
+              </div>
+          </div>
+    
+          <div class="slider-container" v-if="item.type === 'slider'">
+            <!-- Emoji instead of title -->
+            <div class="emoji-container">
+              <span :class="'emoji-' + index">{{ getEmojiForSetting(item.title) }}</span>
+            </div>
+    
+            <!-- Slider Input -->
+            <input
+              :ref="'slider-' + index"
+              type="range"
+              class="slider"
+              :min="getSliderMin(item)"
+              :max="getSliderMax(item)"
+              v-model="item.value"
+              @input="updateGradient(index)"
+              @change="applySetting(index)"
+              :id="'slider-' + index"
+            />
+    
+            <!-- Dynamic emoji inside the slider thumb -->
+            <div class="slider-thumb" :style="{ left: item.value + '%' }">
+              {{ getEmojiForSetting(item.title) }}
+            </div>
+          </div>
+    
+          <!-- Switch Input -->
+          <div v-if="item.type === 'switch'" class="switch-container">
+            <div class="switch-button" @click="toggleSwitch(index)">
+              <div class="option on" :class="{ 'active': item.value }">ON</div>
+              <div class="option off" :class="{ 'active': !item.value }">OFF</div>
+            </div>
+          </div>
+    
+        </div>
+      </div>    
+    </div>
+  </div>
+    
+    
+    
+    
+
+  </div>
+  
+</div>
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="./assets/data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="./vue.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+</body>
+
+</html>
