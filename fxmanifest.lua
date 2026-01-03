@@ -2,16 +2,15 @@ fx_version "cerulean"
 game "gta5"
 lua54 'yes'
 
-author 'MG / MathewGaming'
+author 'MD Development / MathewGaming'
 description "FPS Boost Menu"
 version '1.0.0'
 
 client_script { 
-    "main/client.lua"
+    "main/client/*.lua"
 }
 
 server_script {
-    '@mysql-async/lib/MySQL.lua',
     "main/server/*.lua",
 } 
 
@@ -26,7 +25,3 @@ files {
     'assets/**/*.*',
     'assets/font/*.otf'
 }
-
-escrow_ignore { 'main/shared.lua' }
-
--- dependency '/assetpacks'
