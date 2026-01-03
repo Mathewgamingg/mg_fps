@@ -1,13 +1,6 @@
 local Framework = GetFramework()
 local Callback = (Config.Framework == "ESX" or Config.Framework == "NewESX") and Framework.TriggerServerCallback or Framework.Functions.TriggerCallback
 
-RegisterNUICallback('Close', function()
-    SetNuiFocus(false, false)
-    Citizen.Wait(500)
-    print("Menu zavřeno, FPS: ", GetFPS())
-end)
-
-
 local settings = {
     vehicleDensity = 1.0,
     reflectionsEnabled = true,
@@ -17,6 +10,11 @@ local settings = {
     scenarioPedDensity = 1.0
 }
 
+local isSettingsApplied = false
+
+function GetFPS()
+    return math.floor(1.0 / GetFrameTime())
+end
 
 function GetCurrentSettings()
     return {
@@ -28,39 +26,6 @@ function GetCurrentSettings()
         scenarioPedDensity = settings.scenarioPedDensity * 100
     }
 end
-
-
-RegisterNUICallback('fetchSettings', function(data, cb)
-    cb({ success = true, settings = GetCurrentSettings() })
-end)
-
-
-RegisterKeyMapping('fpsboost', 'FPS Menu', 'keyboard', Config.Keys)
-
-
-RegisterCommand('fpsboost', function()
-    local currentSettings = GetCurrentSettings()
-    SendNUIMessage({ data = 'MENU', open = true, settings = currentSettings })
-    SetNuiFocus(true, true)
-
-    Citizen.CreateThread(function()
-        while IsNuiFocused() do
-            SendNUIMessage({ data = 'FPS_UPDATE', fps = GetFPS() })
-            Citizen.Wait(500)
-        end
-        SetNuiFocus(false, false)
-    end)
-end)
-
-function GetFPS()
-    return math.floor(1.0 / GetFrameTime())
-end
-
-RegisterNUICallback('getFPS', function(data, cb)
-    cb({ fps = GetFPS() })
-end)
-
-local isSettingsApplied = false
 
 function ApplySettingsContinuously()
     if isSettingsApplied then return end
@@ -74,12 +39,14 @@ function ApplySettingsContinuously()
             SetRandomVehicleDensityMultiplierThisFrame(settings.vehicleDensity)
             SetParkedVehicleDensityMultiplierThisFrame(settings.vehicleDensity)
             SetScenarioPedDensityMultiplierThisFrame(settings.scenarioPedDensity, settings.scenarioPedDensity)
-            SetLodScale(settings.grassQuality)
+            OverrideLodscaleThisFrame(settings.grassQuality)
+            
             if settings.reflectionsEnabled then
                 ClearTimecycleModifier()
             else
                 SetTimecycleModifier("reflection_correct_ambient")
             end
+            
             if settings.shadowQuality == 0 then
                 CascadeShadowsClearShadowSampleType()
                 CascadeShadowsSetAircraftMode(false)
@@ -91,10 +58,40 @@ function ApplySettingsContinuously()
             elseif settings.shadowQuality == 3 then
                 CascadeShadowsSetShadowSampleType("veryHigh")
             end
+            
             DisableVehicleDistantlights(not settings.reflectionsEnabled)
         end
     end)
 end
+
+RegisterKeyMapping('fpsboost', 'FPS Menu', 'keyboard', Config.Keys)
+
+RegisterCommand('fpsboost', function()
+    local currentSettings = GetCurrentSettings()
+    SendNUIMessage({ data = 'MENU', open = true, settings = currentSettings })
+    SetNuiFocus(true, true)
+
+    Citizen.CreateThread(function()
+        while IsNuiFocused() do
+            SendNUIMessage({ data = 'FPS_UPDATE', fps = GetFPS() })
+            Citizen.Wait(500)
+        end
+    end)
+end)
+
+RegisterNUICallback('Close', function()
+    SetNuiFocus(false, false)
+    Citizen.Wait(500)
+    print("Menu zavřeno, FPS: ", GetFPS())
+end)
+
+RegisterNUICallback('fetchSettings', function(data, cb)
+    cb({ success = true, settings = GetCurrentSettings() })
+end)
+
+RegisterNUICallback('getFPS', function(data, cb)
+    cb({ fps = GetFPS() })
+end)
 
 RegisterNUICallback('applySetting', function(data, cb)
     if data.native == 'SetVehicleDensityMultiplierThisFrame' then
@@ -110,9 +107,10 @@ RegisterNUICallback('applySetting', function(data, cb)
     elseif data.native == 'SetScenarioPedDensityMultiplierThisFrame' then
         settings.scenarioPedDensity = data.value / 100
     else
-        cb({ status = 'error', message = 'Unknown local function' })
+        cb({ status = 'error', message = 'Unknown function' })
         return
     end
+    
     ApplySettingsContinuously()
     cb({ status = 'ok', fps = GetFPS() })
 end)
